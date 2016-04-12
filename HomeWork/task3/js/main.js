@@ -1,26 +1,22 @@
-﻿var user = {
-    name: "Kitty",
-    email: "hello.kittycats.com",
-    age: -2651321,
-    isAdmin: false
-};
-var validateResults = [
-						{
-						parametr: undefined,
-						status: undefined,
-						message: undefined
-						},
-						{
-						 parametr: undefined,
-						 status: undefined,
-						 message: undefined
-						}
-					];
-
-
+﻿var validateResults = [];
+var userBad = {
+		name: null,
+		email: "hello.kittycats.com",
+		age: -2651321
+	}	
+var userGood = {
+		name: "Kitty",
+		email: "hello.kitty@cats.com",
+		age: 100
+	}	
+    
+    
 function validateEmail (mail) {
 	  var mailPattern= /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
-	  if (mailPattern.test(mail))
+	  
+	  if ( (mail === "undefined") || (mail === null) )
+		  return 'Email not found';
+	  else if (mailPattern.test(mail))
 		  return 'OK';
 	  else 
 		  return 'I cant send letter to this address :(';
@@ -28,6 +24,8 @@ function validateEmail (mail) {
 }
 function validateAge(age){
 	switch (true) {
+		case ( (age === "undefined") || (age === null)):
+			return 'Age not found';
 		case age < 0:
 		   return 'Hm.. Are U from other Planet?';
 		case age > 150:
@@ -39,38 +37,48 @@ function validateAge(age){
 	}
 	
 }
+function validateName(name){
+	if ( (name === "undefined") || (name === null))
+			return 'Unhappy user';
+	else return 'OK';
+}
+
 function validateUser (objUser){
 	var valideAgeRes =  validateAge(objUser.age);
 	//check age
-	validateResults[0].parametr = 'AGE';
 	switch (true) {
 		case valideAgeRes === 'OK':
-			validateResults[0].status = true;
-			validateResults[0].message = valideAgeRes;
+			validateResults.push({parameter:'AGE', status:true, message:valideAgeRes});
 			break;
 		case valideAgeRes !== 'OK':
-			validateResults[0].status = false;
-			validateResults[0].message = valideAgeRes;
+			validateResults.push({parameter:'AGE', status:false, message:valideAgeRes});
 			break;
 			
 	}
 	//check email
-	validateResults[1].parametr = 'EMAIL';
 	validateEmailRes = validateEmail (objUser.email)
 	switch (true) {
 		case validateEmailRes === 'OK':
-			validateResults[1].status = true;
-			validateResults[1].message = validateEmailRes;
+			validateResults.push({parameter:'EMAIL', status:true, message:validateEmailRes});
 			break;
 		case validateEmailRes !== 'OK':
-			validateResults[1].status = false;
-			validateResults[1].message = validateEmailRes;
+			validateResults.push({parameter:'EMAIL', status:false, message:validateEmailRes});
+			break;			
+	}
+	//chech name
+	validateNameRes = validateName (objUser.name)
+	switch (true) {
+		case validateNameRes === 'OK':
+			validateResults.push({parameter:'NAME', status:true, message:validateNameRes});
 			break;
-			
+		case validateEmailRes !== 'OK':
+			validateResults.push({parameter:'NAME', status:false, message:validateNameRes});
+			break;			
 	}
 	
-   console.log(validateResults);
+
+	return(validateResults);
 	
 };
 
-validateUser (user);
+console.log(validateUser (userBad));
